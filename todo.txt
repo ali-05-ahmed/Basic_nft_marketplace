@@ -1,0 +1,3 @@
+1. after minting show nft in My Digital Asset page.
+2. user cannot buy his own nft.
+3. use must be able to sell his owned nfts again.
