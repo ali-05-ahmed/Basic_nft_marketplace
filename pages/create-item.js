@@ -8,7 +8,7 @@ const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 import {
   nftaddress, nftmarketaddress
-} from '../config'
+} from '../config.js'
 
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
@@ -31,7 +31,7 @@ export default function CreateItem() {
       setFileUrl(url)
     } catch (error) {
       console.log('Error uploading file: ', error)
-    }  
+    }
   }
   async function createMarket() {
     const { name, description, price } = formInput
@@ -47,15 +47,15 @@ export default function CreateItem() {
       createSale(url)
     } catch (error) {
       console.log('Error uploading file: ', error)
-    }  
+    }
   }
 
   async function createSale(url) {
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)    
+    const provider = new ethers.providers.Web3Provider(connection)
     const signer = provider.getSigner()
-    
+
     /* next, create the item */
     let contract = new ethers.Contract(nftaddress, NFT.abi, signer)
     let transaction = await contract.createToken(url)
@@ -65,7 +65,7 @@ export default function CreateItem() {
     let tokenId = value.toNumber()
 
     const price = ethers.utils.parseUnits(formInput.price, 'ether')
-  
+
     /* then list the item for sale on the marketplace */
     contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
     let listingPrice = await contract.getListingPrice()
@@ -79,7 +79,7 @@ export default function CreateItem() {
   return (
     <div className="flex justify-center">
       <div className="w-1/2 flex flex-col pb-12">
-        <input 
+        <input
           placeholder="Asset Name"
           className="mt-8 border rounded p-4"
           onChange={e => updateFormInput({ ...formInput, name: e.target.value })}

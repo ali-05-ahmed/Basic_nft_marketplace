@@ -5,7 +5,7 @@ import Web3Modal from "web3modal"
 
 import {
   nftmarketaddress, nftaddress
-} from '../config'
+} from '../config.js'
 
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
@@ -25,11 +25,11 @@ export default function CreatorDashboard() {
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)
     const signer = provider.getSigner()
-      
+
     const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
     const data = await marketContract.fetchItemsCreated()
-    
+
     const items = await Promise.all(data.map(async i => {
       const tokenUri = await tokenContract.tokenURI(i.tokenId)
       const meta = await axios.get(tokenUri)
@@ -48,14 +48,14 @@ export default function CreatorDashboard() {
     const soldItems = items.filter(i => i.sold)
     setSold(soldItems)
     setNfts(items)
-    setLoadingState('loaded') 
+    setLoadingState('loaded')
   }
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No assets created</h1>)
   return (
     <div>
       <div className="p-4">
         <h2 className="text-2xl py-2">Items Created</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {
             nfts.map((nft, i) => (
               <div key={i} className="border shadow rounded-xl overflow-hidden">
@@ -68,7 +68,7 @@ export default function CreatorDashboard() {
           }
         </div>
       </div>
-        <div className="px-4">
+      <div className="px-4">
         {
           Boolean(sold.length) && (
             <div>
@@ -88,7 +88,7 @@ export default function CreatorDashboard() {
             </div>
           )
         }
-        </div>
+      </div>
     </div>
   )
 }
